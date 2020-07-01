@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Post{% endblock %}
+
+{% block content %}
+
+    
+{% if user.is_authenticated %}
+    {% if user.id == post.author.id %}
+        <h1>Delete Post</h1>
+        <br/>
+        <br/>
+        <h3>Title: {{ post.title }}</h3>
+        <small>Author: {{ post.author }}</small><br/>
+        <small>Posted on: {{ post.post_date }}  |  {{ post.post_time }}</small>
+        <hr>
+        {{ post.body|safe }}
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="form-group">
+            <form method="POST">
+                {% csrf_token %}
+                {% if post.add_file %}
+                    <button class="btn btn-outline-warning mr-3" disabled>{{ post.add_file }}</button><br/><br/>
+                {% endif %}
+                <strong>Are you sure you want to delete your post?</strong><br/>
+            <button class="btn btn-primary" >Confirm</button>
+        </div>
+    {% else %}
+        <h1>{{ user }} is Not the Author of this Post!</h1>
+
+    {% endif %}
+
+{% else %}
+
+<h1>User Not Login!</h1>
+
+{% endif %}
+
+    
+
+
+{% endblock %}

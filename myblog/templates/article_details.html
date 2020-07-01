@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+
+    <h1>{{ post.title }}</h1>
+    <small>By: {{ post.author }}</small><br/>
+    <small>Category: <a href="{% url 'category' post.category|slugify %}">{{ post.category }}</a></small><br/>   
+    <small>Posted on: {{ post.post_date }}  |  {{ post.post_time }}</small>
+
+    <hr>
+    <br/>
+    {{ post.body | safe}}<br/>
+
+    {% if post.image  %}
+        <img src="{{ post.image.url }}">
+    {% endif %}
+
+    {% if post.add_file %}
+        <a href="{{ post.add_file.url }}"><button class="btn btn-outline-warning mr-3">{{ post.add_file }}</button></a>
+    {% endif %}
+
+
+    {% if user.is_authenticated %}
+        {% if user.id == post.author.id %}
+            <br/><br/>
+                <a href="{% url 'update_post' post.pk %}" class="btn btn-secondary">Edit</a>
+                <br/><br/>
+                <a href="{% url 'delete_post' post.pk %}" class="btn btn-secondary">Delete</a>
+            <br/><br/>
+        {% else %}
+            <br/><br/>
+        {% endif %}
+    
+    {% else %}
+        <br/><br/>
+    {% endif %}
+
+    <hr>
+    <br/>
+    <form action="{% url 'like_post' post.pk %}" method="POST">
+        {% csrf_token %}
+
+        {% if user.is_authenticated %}
+            {% if liked %}
+                <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-danger btn-sm">Unlike</button> 
+            {% else %}
+                <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Like</button> 
+            {% endif %}
+                
+        {% else %}
+            <small>User Must be <a href="{% url 'login' %}">Logged In</a> to Like</small><br/>
+            <button type="button" class="btn btn-primary btn-sm" disabled>Like</button>
+        {% endif %}
+         - {{ total_likes }} Likes
+    </form>
+    <br/><br/>
+    <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
+
+
+{% endblock %}

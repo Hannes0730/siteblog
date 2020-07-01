@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Post{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    {% if user.id == post.author.id %}
+        <h1>Update Post</h1>
+        <br/>
+        <br/>
+
+        <div class="form-group">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.media }}
+                {{ form.as_p }}
+            <button class="btn btn-primary" >Update</button>
+        </div>
+    {% else %}
+        <h1>{{ user }} is Not the Author of this Post!</h1>
+
+    {% endif %}
+
+{% else %}
+
+<h1>User Not Login!</h1>
+
+{% endif %}
+    
+
+
+{% endblock %}
